@@ -1,0 +1,124 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    senderEmail: '%env(SMTP_USER)%'
+    senderEncryption: '%env(SMTP_ENCRYPTION)%'
+    senderHost: '%env(SMTP_HOST)%'
+    senderPassword: '%env(SMTP_PASS)%'
+    senderPort: '%env(SMTP_PORT)%'
+    imapMailbox: '%env(IMAP_MAILBOX)%'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $environment: '%kernel.environment%'
+            $adminEmail: 'brain22@inbox.ru'
+            $senderEmail: '%senderEmail%'
+            $senderEncryption: '%senderEncryption%'
+            $senderHost: '%senderHost%'
+            $senderPassword: '%senderPassword%'
+            $senderPort: '%senderPort%'
+            $imapMailbox: '%imapMailbox%'
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,DTO,Migrations,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    App\EventListener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    admin.product:
+        class: App\Admin\ProductAdmin
+        arguments: [~, App\Entity\Product, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Товар }
+
+    admin.category:
+        class: App\Admin\CategoryAdmin
+        arguments: [~, App\Entity\Category, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Таксономия }
+
+    admin.paymentMethod:
+        class: App\Admin\PaymentMethodAdmin
+        arguments: [~, App\Entity\PaymentMethod, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Способы Оплаты }
+
+    admin.shipementMethod:
+        class: App\Admin\ShipmentMethodAdmin
+        arguments: [~, App\Entity\ShipmentMethod, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Способы Доставки }
+
+    admin.payment:
+        class: App\Admin\PaymentAdmin
+        arguments: [~, App\Entity\Payment, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Платежи }
+
+    admin.shipement:
+        class: App\Admin\ShipmentAdmin
+        arguments: [~, App\Entity\Shipment, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Досткавка }
+
+    admin.image:
+        class: App\Admin\ImageAdmin
+        arguments: [~, App\Entity\Image, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Медиа }
+
+    admin.order:
+        class: App\Admin\OrderAdmin
+        arguments: [~, App\Entity\Order, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Заказы }
+
+    admin.seo:
+        class: App\Admin\SeoAdmin
+        arguments: [~, App\Entity\Seo, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Seo }
+
+    admin.feedback:
+        class: App\Admin\FeedbackAdmin
+        arguments: [~, App\Entity\Feedback, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Обратная связь }
+
+    admin.review:
+        class: App\Admin\ReviewAdmin
+        arguments: [~, App\Entity\Review, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Отзывы о товаре }
+
+    admin.user:
+        class: App\Admin\UserAdmin
+        arguments: [~, App\Entity\User, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Пользователи }
+
+    admin.pickpointzone:
+        class: App\Admin\PickPointZoneAdmin
+        arguments: [~, App\Entity\PickPointZone, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: Пикпоинт зоны }

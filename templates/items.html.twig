@@ -1,0 +1,50 @@
+{% extends '@SonataAdmin/CRUD/base_show_field.html.twig' %}
+
+{% block field %}
+    {% spaceless %}
+
+
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr class="sonata-ba-list-field-header">
+                <th class="sonata-ba-list-field-header-text">Id товара</th>
+                <th class="sonata-ba-list-field-header-text">Id вариации товара</th>
+                <th class="sonata-ba-list-field-header-text">цвет</th>
+                <th class="sonata-ba-list-field-header-text">размер</th>
+                <th class="sonata-ba-list-field-header-text">Товар</th>
+                <th class="sonata-ba-list-field-header-text">Цена товара</th>
+                <th class="sonata-ba-list-field-header-text">Количество</th>
+                <th class="sonata-ba-list-field-header-text">В наличии</th>
+                <th class="sonata-ba-list-field-header-text">Баркод</th>
+                <th class="sonata-ba-list-field-header-text">aId</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for item in object.items %}
+                {%  set variant = item.productVariant %}
+                {%  set product = variant.product %}
+                {%  set productId = product.id %}
+                {%  set aId = variant.aId %}
+                {%  set variantId = variant.id %}
+                {%  set stockData = variant.stockData %}
+
+                <tr>
+                    <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ product.id }}</td>
+                    <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ variant.id }}</td>
+                    <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ variant.color }}</td>
+                    <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ variant.size }}</td>
+                    <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ product.name }}</td>
+                    <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ product.price }}</td>
+                    <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ item.quantity }}</td>
+                    <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ stockData.quantityInStock }}</td>
+                    <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ variant.barcode }}</td>
+                    <td class="sonata-ba-list-field sonata-ba-list-field-text">{{ variant.aId }}</td>
+                </tr>
+
+
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endspaceless %}
+{% endblock %}
